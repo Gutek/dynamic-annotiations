@@ -1,0 +1,145 @@
+{
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+        "annotations": {
+            "deployment.kubernetes.io/revision": "1",
+            "meta.helm.sh/release-name": "annotiation-mutating",
+            "meta.helm.sh/release-namespace": "annotiation-mutating"
+        },
+        "creationTimestamp": "2023-05-19T08:18:25Z",
+        "generation": 1,
+        "labels": {
+            "app": "dynatrace-annotiation-mutating",
+            "app.kubernetes.io/managed-by": "Helm",
+            "heritage": "annotiation-mutating"
+        },
+        "name": "nginx-operator",
+        "namespace": "annotiation-mutating",
+        "resourceVersion": "28306",
+        "uid": "cac35693-1d16-48f8-88b9-1a87a55f20f4"
+    },
+    "spec": {
+        "progressDeadlineSeconds": 600,
+        "replicas": 1,
+        "revisionHistoryLimit": 10,
+        "selector": {
+            "matchLabels": {
+                "app": "dynatrace-annotiation-mutating"
+            }
+        },
+        "strategy": {
+            "type": "Recreate"
+        },
+        "template": {
+            "metadata": {
+                "annotations": {
+                    "prometheus.io/path": "/metrics",
+                    "prometheus.io/scheme": "https",
+                    "prometheus.io/port": 8080,
+                    "prometheus.io/scrape": true,
+                    "checksum/hook": "a8c31347a8ffd79d4a8359d92f03c95fc6033cccfe3c0c841df57ebe0585bd88"
+                },
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "dynatrace-annotiation-mutating",
+                    "heritage": "annotiation-mutating"
+                }
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "SHELL_OPERATOR_NAMESPACE",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.namespace"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "LOG_LEVEL",
+                                "value": "Debug"
+                            },
+                            {
+                                "name": "VALIDATING_WEBHOOK_SERVICE_NAME",
+                                "value": "annotiation-mutating-service"
+                            },
+                            {
+                                "name": "VALIDATING_WEBHOOK_CONFIGURATION_NAME",
+                                "value": "annotiation-mutating"
+                            }
+                        ],
+                        "image": "gutek/mutating:shell-operator",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/healthz",
+                                "port": 9680,
+                                "scheme": "HTTPS"
+                            },
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "name": "shell-operator",
+                        "resources": {},
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/validating-certs/",
+                                "name": "validating-certs",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "annotiation-mutating-acc",
+                "serviceAccountName": "annotiation-mutating-acc",
+                "terminationGracePeriodSeconds": 30,
+                "volumes": [
+                    {
+                        "name": "validating-certs",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "annotiation-mutating-certs"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "status": {
+        "availableReplicas": 1,
+        "conditions": [
+            {
+                "lastTransitionTime": "2023-05-19T08:18:28Z",
+                "lastUpdateTime": "2023-05-19T08:18:28Z",
+                "message": "Deployment has minimum availability.",
+                "reason": "MinimumReplicasAvailable",
+                "status": "True",
+                "type": "Available"
+            },
+            {
+                "lastTransitionTime": "2023-05-19T08:18:25Z",
+                "lastUpdateTime": "2023-05-19T08:18:28Z",
+                "message": "ReplicaSet \"shell-operator-9f6445f6c\" has successfully progressed.",
+                "reason": "NewReplicaSetAvailable",
+                "status": "True",
+                "type": "Progressing"
+            }
+        ],
+        "observedGeneration": 1,
+        "readyReplicas": 1,
+        "replicas": 1,
+        "updatedReplicas": 1
+    }
+}

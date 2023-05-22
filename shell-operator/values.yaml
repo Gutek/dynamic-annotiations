@@ -1,0 +1,5 @@
+shellOperator:
+  image: gutek/mutating:shell-operator
+  # Important: this name should be the same as in gen-certs.sh and csr.json.
+  webhookServiceName: annotiation-mutating-service
+  webhookConfigurationName: annotiation-mutating

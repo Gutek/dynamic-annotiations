@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shell-operator
+  labels:
+    heritage: annotiation-mutating
+    app: dynatrace-annotiation-mutating
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dynatrace-annotiation-mutating
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        heritage: annotiation-mutating
+        app: dynatrace-annotiation-mutating
+      annotations:
+        checksum/hook: {{ .Files.Get "hooks/mutating.sh" | sha256sum }}
+    spec:
+      containers:
+      - name: shell-operator
+        image: {{ .Values.shellOperator.image | quote }}
+        imagePullPolicy: Always
+        env:
+        - name: SHELL_OPERATOR_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: LOG_LEVEL
+          value: Debug
+        - name: VALIDATING_WEBHOOK_SERVICE_NAME
+          value: {{ .Values.shellOperator.webhookServiceName | quote }}
+        - name: VALIDATING_WEBHOOK_CONFIGURATION_NAME
+          value: {{ .Values.shellOperator.webhookConfigurationName | quote }}
+        livenessProbe:
+          httpGet:
+            port: 9680
+            path: /healthz
+            scheme: HTTPS
+        volumeMounts:
+        - name: validating-certs
+          mountPath: /validating-certs/
+          readOnly: true
+      serviceAccountName: annotiation-mutating-acc
+      volumes:
+      - name: validating-certs
+        secret:
+          secretName: annotiation-mutating-certs

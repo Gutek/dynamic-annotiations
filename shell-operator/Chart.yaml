@@ -1,0 +1,4 @@
+apiVersion: v1
+name: annotiation-mutating-webhook
+version: 1.0.1
+description: Shell-operator mutating hook for adding dynatrace annotations if premtheus annotiation is installed

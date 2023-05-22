@@ -1,0 +1,15 @@
+templates
+.helmignore
+Chart.yaml
+deploy*.yaml
+test.sh
+README.md
+values.yaml
+test.sh
+tes.json
+cls.sh
+deploy-name-does-not-match.yaml
+deploy-name-match-no-annotiations.yaml
+deploy-name-match-with-prometheous-correct.yaml
+deploy-name-match-with-prometheous-wrong.yaml
+deploy-name-match-wrong-annotiations.yaml

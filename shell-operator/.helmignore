@@ -1,0 +1,12 @@
+Dockerfile
+README.md
+gen-certs.sh
+shell-operator
+test.sh
+test.json
+cls.sh
+deploy-name-does-not-match.yaml
+deploy-name-match-no-annotiations.yaml
+deploy-name-match-with-prometheous-correct.yaml
+deploy-name-match-with-prometheous-wrong.yaml
+deploy-name-match-wrong-annotiations.yaml
